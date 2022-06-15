@@ -2,14 +2,20 @@
 
 ##### *INSTALLING LIBRARY*
 install.packages("tidyquant")
+
 install.packages("PerformanceAnalytics")
+
 install.packages("dplyr")
+
 install.packages("tidyverse")
 
 ##### *LOADING LIBRARY*
 library(tidyquant)
+
 library(PerformanceAnalytics)
+
 library(dplyr)
+
 library(tidyverse)
 
 ##### *SELECTING IBOVESPA ASSETS FOR THE MODEL*
