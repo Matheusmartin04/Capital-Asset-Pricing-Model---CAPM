@@ -33,9 +33,7 @@ acoes_df <- tq_get(acoes_v,
                    get = "stock.prices") %>% 
   group_by(symbol)
 
-view(acoes_df)
-
-tail(acoes_df,10) 
+#### SELECTING THE EXPECTED RETURN ON THE ASSET IN THE SAME PERIOD
 Ri <- acoes_df %>% tq_transmute(select = adjusted,
                                 mutate_fun = periodReturn,
                                 period = "daily",
