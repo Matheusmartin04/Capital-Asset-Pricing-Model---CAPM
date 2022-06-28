@@ -3,10 +3,10 @@ rm(list = ls())
 
 ### CARREGANDO As BIBLIOTECAS NECESSÁRIA
 
-library(tidyquant)
-library(PerformanceAnalytics)
-library(dplyr)
-library(tidyverse)
+library(tidyquant)  
+library(PerformanceAnalytics)  
+library(dplyr)  
+library(tidyverse)  
 
 ### SELEÇÃO DE ATIVOS IBOVESPA PARA O MODELO
 *MGLU3.SA - MAGALU*  
