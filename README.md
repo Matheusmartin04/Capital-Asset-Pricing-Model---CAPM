@@ -1,16 +1,14 @@
-# Capital-Asset-Pricing-Model---CAPM
+## Capital-Asset-Pricing-Model-CAPM
+rm(list = ls())
 
+### CARREGANDO As BIBLIOTECAS NECESSÁRIA
 
-##### *LOADING NECESSARY LIBRARY*
-```{r, eval=T, echo=F, message=FALSE, warning=F}
 library(tidyquant)
 library(PerformanceAnalytics)
 library(dplyr)
 library(tidyverse)
-library(knitr)
-library(kableExtra)
-```
-### *SELECTING IBOVESPA ASSETS FOR THE MODEL*
+
+### SELEÇÃO DE ATIVOS IBOVESPA PARA O MODELO
 *MGLU3.SA - MAGALU*  
 *WEGE3.SA - WEG ON NM*  
 *POSI3.SA - POSITIVO TECNOLOGY*  
@@ -20,28 +18,29 @@ library(kableExtra)
 *BBDC4.SA - BANCO DO BRADESCO*  
 *ITSA4.SA - ITAUSA*  
 *CSNA3.SA - COMPANHIA SIDERÚGICA NACIONAL*  
-*GGBR4.SA - GERDAU*  
-```{r, eval=T, echo=F, message=FALSE, warning=F}
+*GGBR4.SA - GERDAU* 
+
+### CRIANDO O VETOR COM CODIGOS DO ATIVOS
 acoes_v <- c("MGLU3.SA", "WEGE3.SA", "POSI3.SA", "WIZS3.SA","PETR4.SA","ITUB4.SA","BBDC4.SA",
              "ITSA4.SA","CSNA3.SA","GGBR4.SA")
-```
-##### SELECTING ACTIVE COST VALUES (OPENING, HIGH, LOW, CLOSE, VOLUME), FOR A DEFINED PERIOD
-```{r, eval=T, echo=F, message=FALSE, warning=F}
+
+### SELEÇÃO DE VALORES DE CUSTO ATIVOS (ABERTURA, ALTO, BAIXO, FECHADO, VOLUME), PARA UM PERÍODO DE 01/jan À 31/05
+
 acoes_df <- tq_get(acoes_v,
                    from = "2021-01-01", 
                    to = "2022-05-31", 
                    get = "stock.prices") %>% 
   group_by(symbol)
-```
-##### LOWERING THE BASES OF EXPECTED RETURN(Ri) AND MARKET RETURN(Rm)
-```{r, eval=T, echo=F, message=FALSE, warning=F}
-#### SELECTING THE EXPECTED RETURN ON THE ASSET IN THE SAME PERIOD
+
+### OBTENDO  BASES DE RETORNO ESPERADO(Rf) E RETORNO DE MERCADO(Rm)
+
+### SELECIONANDO O RETORNO ESPERADO DO ATIVO NO MESMO PERÍODO
 Ri <- acoes_df %>% tq_transmute(select = adjusted,
                                 mutate_fun = periodReturn,
                                 period = "daily",
                                 col_rename = "Ri")
 
-
+### SELECIONANDO O RETORNO DE MERCADO DO ATIVO NO MESMO PERÍODO
 Rm <- "^BVSP" %>%
   tq_get(get  = "stock.prices",
          from = "2021-01-01",
@@ -50,20 +49,18 @@ Rm <- "^BVSP" %>%
                mutate_fun = periodReturn,
                period     = "daily",
                col_rename = "Rm")
-```
 
-##### REMOVING MISSING VALUES Ri AND Rm AND JOINING THE BASES
-```{r, eval=T, echo=F, message=FALSE, warning=F}
+
+### REMOVENDO VALORES FALTANTES Ri E Rm E UNIÃO DAS BASES
+
 Ri <- na.omit(Ri)
 Rm <- na.omit(Rm)
 
 RiRm <- left_join(Ri, Rm, by = c("date" = "date"))
-```
 
-##### CREATING THE CAPITAL ASSET PRICING MODEL
-```{r, eval=T, echo=F, message=FALSE, warning=F}
+
+### CRIANDO O MODELO DE PRECIFICAÇÃO DE ATIVOS DE CAPITAL
+
 x <- tq_performance(RiRm, Ri, Rm, Rf = 0.1275/252, performance_fun = table.CAPM)
-kable(x, caption = 'Tabela 1 - CAPITAL ASSET PRICING MODEL - CAPM') %>%
-  kable_styling(full_width = F, bootstrap_options = c("striped", "hover", "condensed", "responsive"),  fixed_thead = T)%>% 
-  scroll_box(width = "800px", height = "400px")
-```
+view(x)
+
